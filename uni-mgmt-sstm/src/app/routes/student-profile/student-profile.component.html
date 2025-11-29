@@ -1,0 +1,192 @@
+<div class="flex h-screen bg-gray-100">
+  <app-student-sidebar></app-student-sidebar>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div
+      *ngIf="student"
+      class="max-w-3xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-xl border border-gray-200"
+    >
+      <h1
+        class="text-3xl font-extrabold text-blue-700 flex items-center gap-2 mb-6"
+      >
+        <span>🎓</span> Student Profile
+      </h1>
+
+      <!-- Profile Info -->
+      <div class="space-y-4 text-gray-700">
+        <p>
+          <strong class="text-gray-600">ID:</strong>
+          {{ formatUserId(student.USER_ID) }}
+        </p>
+        <p>
+          <strong class="text-gray-600">Name:</strong> {{ student.USER_NAME }}
+        </p>
+        <p>
+          <strong class="text-gray-600">Email:</strong> {{ student.USER_EMAIL }}
+        </p>
+        <p class="relative">
+          <strong class="text-gray-600">Password:</strong>
+          <span class="ml-2">
+            {{ showPassword ? student.USER_PASSWORD : "***********" }}
+          </span>
+          <button
+            type="button"
+            (click)="showPassword = !showPassword"
+            class="absolute right-0 top-0 text-gray-500 hover:text-gray-800"
+            title="Toggle Password"
+          >
+            <svg
+              *ngIf="!showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 inline-block ml-2"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10z"
+              />
+              <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
+            </svg>
+            <svg
+              *ngIf="showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 inline-block ml-2"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12 6a9.77 9.77 0 018.66 5.43 1 1 0 010 .94A9.77 9.77 0 0112 18a9.77 9.77 0 01-8.66-5.43 1 1 0 010-.94A9.77 9.77 0 0112 6m0-2C6.48 4 1.73 8.11.5 12a10.64 10.64 0 0021 0c-1.23-3.89-6-8-10.5-8zm0 5a3 3 0 013 3 3 3 0 01-3 3 3 3 0 010-6z"
+              />
+            </svg>
+          </button>
+        </p>
+      </div>
+
+      <div class="flex justify-start text-center">
+        <button
+          (click)="toggleEdit()"
+          class="mt-6 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          Edit Profile
+        </button>
+      </div>
+
+      <!-- Edit Form -->
+      <form
+        *ngIf="showEditForm"
+        (ngSubmit)="updateStudent(student)"
+        class="mt-8 space-y-6 p-6 bg-gray-50 rounded-lg border border-gray-200"
+      >
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+            >Full Name</label
+          >
+          <input
+            id="name"
+            [(ngModel)]="student.USER_NAME"
+            name="USER_NAME"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+          />
+        </div>
+
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Email Address</label
+          >
+          <input
+            id="email"
+            [(ngModel)]="student.USER_EMAIL"
+            name="USER_EMAIL"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+          />
+        </div>
+
+        <div>
+          <label
+            for="courses"
+            class="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Courses
+          </label>
+          <input
+            id="courses"
+            type="text"
+            name="COURSES"
+            [ngModel]="courseNamesAsString"
+            (ngModelChange)="onCourseInputChange($event)"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            [disabled]="!student.IS_AUTH_TO_REG"
+            [ngClass]="{
+              'opacity-50 cursor-not-allowed bg-gray-100':
+                !student.IS_AUTH_TO_REG,
+              'bg-white cursor-text': student.IS_AUTH_TO_REG
+            }"
+          />
+        </div>
+
+        <div>
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Password</label
+          >
+          <div class="relative">
+            <input
+              id="password"
+              [(ngModel)]="student.USER_PASSWORD"
+              name="USER_PASSWORD"
+              [type]="showPassword ? 'text' : 'password'"
+              class="w-full pr-12 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            />
+            <button
+              type="button"
+              (click)="showPassword = !showPassword"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-800"
+              tabindex="-1"
+            >
+              <svg
+                *ngIf="!showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M10 3C5 3 1.73 7.11 1 10c.73 2.89 4 7 9 7s8.27-4.11 9-7c-.73-2.89-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10z"
+                />
+                <path d="M10 7a3 3 0 100 6 3 3 0 000-6z" />
+              </svg>
+              <svg
+                *ngIf="showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 6a9.77 9.77 0 018.66 5.43 1 1 0 010 .94A9.77 9.77 0 0112 18a9.77 9.77 0 01-8.66-5.43 1 1 0 010-.94A9.77 9.77 0 0112 6m0-2C6.48 4 1.73 8.11.5 12a10.64 10.64 0 0021 0c-1.23-3.89-6-8-10.5-8zm0 5a3 3 0 013 3 3 3 0 01-3 3 3 3 0 010-6z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full sm:w-auto px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
+          Save Changes
+        </button>
+      </form>
+    </div>
+
+    <!-- Optional loading state -->
+    <div *ngIf="!student" class="text-center text-gray-500 mt-12">
+      Loading student data...
+    </div>
+  </main>
+</div>

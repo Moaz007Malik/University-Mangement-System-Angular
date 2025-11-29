@@ -1,0 +1,45 @@
+<div class="min-h-screen flex flex-col justify-between bg-gray-100">
+
+  <header class="w-full py-6 px-10 flex items-center justify-between bg-white shadow">
+    <h1 class="text-3xl font-bold text-blue-700">🏛️ University Portal</h1>
+    <nav class="space-x-4">
+      <a routerLink="/login" class="text-blue-600 font-medium hover:underline">Login</a>
+      <a routerLink="/register" class="text-blue-600 font-medium hover:underline">Register</a>
+    </nav>
+  </header>
+
+  <section class="flex-grow flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto px-6 py-20">
+
+    <div class="lg:w-1/2 text-center lg:text-left">
+      <h2 class="text-4xl md:text-5xl font-bold text-blue-700 mb-6 leading-tight">
+        Empowering Students and Teachers <br />
+        Through Smart Management
+      </h2>
+      <p class="text-lg text-gray-700 mb-8">
+        Access courses, manage users, and streamline education—all in one place.
+      </p>
+      <div class="flex justify-center lg:justify-start gap-4">
+        <a
+          routerLink="/login"
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+        >
+          Get Started
+        </a>
+        <a
+          routerLink="/about"
+          class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-100 transition font-medium"
+        >
+          Learn More
+        </a>
+      </div>
+    </div>
+
+    <div class="lg:w-1/2 mt-10 lg:mt-0">
+      <img src="https://www.cn.edu/wp-content/uploads/2023/10/shutterstock_218235067.jpg" alt="Students" class="w-full max-w-md mx-auto rounded-4xl">
+    </div>
+  </section>
+
+  <footer class="bg-white text-center py-4 text-gray-500 border-t">
+    © {{ currentDate }} University Management System. All rights reserved.
+  </footer>
+</div>

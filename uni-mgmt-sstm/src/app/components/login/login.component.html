@@ -1,0 +1,72 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div
+    class="flex flex-col md:flex-row w-full max-w-7xl shadow-lg bg-white rounded-lg overflow-hidden"
+  >
+    <div
+      class="md:w-1/2 w-full bg-gray-200 flex items-center justify-center p-4"
+    >
+      <img
+        src="https://www.vidyalayaschoolsoftware.com/webassets/images/img_college.png"
+        alt="Ums Logo"
+        class="max-w-full h-auto"
+      />
+    </div>
+
+    <div class="md:w-1/2 w-full p-8 flex flex-col justify-center">
+      <h2 class="text-2xl font-semibold mb-6 text-center">Login</h2>
+
+      <form class="space-y-4" (ngSubmit)="onLogin()">
+        <!-- Login Method Selector -->
+        <div class="flex flex-col space-y-2">
+          <label class="font-medium">Login With:</label>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2">
+              <input
+                type="radio"
+                name="loginMethod"
+                [(ngModel)]="loginMethod"
+                [value]="'userid'"
+              />
+              User ID
+            </label>
+            <label class="flex items-center gap-2">
+              <input
+                type="radio"
+                name="loginMethod"
+                [(ngModel)]="loginMethod"
+                [value]="'email'"
+              />
+              Email
+            </label>
+          </div>
+        </div>
+
+        <!-- Identifier -->
+        <input
+          type="text"
+          name="identifier"
+          [(ngModel)]="identifier"
+          (input)="formatUserId()"
+          [placeholder]="loginMethod === 'email' ? 'Email Address' : 'User ID'"
+          class="w-full border border-gray-300 rounded-lg p-2"
+        />
+
+        <!-- Password -->
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Password"
+          class="w-full border border-gray-300 rounded-lg p-2"
+        />
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded-lg"
+        >
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

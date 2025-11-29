@@ -1,0 +1,168 @@
+<div class="flex h-screen bg-gray-100">
+  <app-student-sidebar></app-student-sidebar>
+
+  <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
+    <div
+      class="p-8 bg-white shadow-xl rounded-2xl max-w-3xl mx-auto mt-10 transition-all duration-300"
+    >
+      <h2
+        class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-gray-200"
+      >
+        📚 Request Course Action
+      </h2>
+
+      <!-- Course Select -->
+      <div class="mb-6">
+        <label
+          for="course"
+          class="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Select Course
+        </label>
+        <select
+          [(ngModel)]="selectedCourse"
+          (ngModelChange)="onCourseSelect($event)"
+          id="course"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+        >
+          <option [ngValue]="null" disabled>Select a course</option>
+          <option *ngFor="let course of courses" [ngValue]="course">
+            {{ course.COURSE_NAME }} ({{ course.COURSE_CODE }})
+          </option>
+        </select>
+
+        <!-- Remaining Course Slots -->
+        <div
+          *ngIf="remainingCourseSlots !== null"
+          class="text-green-700 mt-2 font-semibold"
+        >
+          ✅ You can enroll in {{ remainingCourseSlots }} more course{{
+            remainingCourseSlots === 1 ? "" : "s"
+          }}.
+        </div>
+      </div>
+
+      <!-- Request Type -->
+      <div class="mb-6" *ngIf="selectedCourse">
+        <label class="block text-sm font-medium text-gray-700 mb-2"
+          >Choose Request Type</label
+        >
+        <div class="flex gap-4">
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="requestType"
+              value="enroll"
+              [(ngModel)]="requestType"
+              (change)="evaluateRequestOptions()"
+              class="form-radio text-blue-600"
+            />
+            <span class="ml-2 text-sm text-gray-700">Enroll</span>
+          </label>
+          <label class="inline-flex items-center">
+            <input
+              type="radio"
+              name="requestType"
+              value="drop"
+              [(ngModel)]="requestType"
+              (change)="evaluateRequestOptions()"
+              class="form-radio text-blue-600"
+            />
+            <span class="ml-2 text-sm text-gray-700">Drop</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        (click)="submitRequest()"
+        [disabled]="!selectedCourse || hasPendingRequest"
+        class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-[1.02] transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ canDirectEnroll ? "🔐 Submit" : "📩 Submit Request" }}
+      </button>
+
+      <!-- Error Message -->
+      <p *ngIf="hasPendingRequest" class="text-sm text-red-600 mt-2">
+        ⚠️ {{ pendingRequestMessage }}
+      </p>
+    </div>
+
+    <!-- Previous Requests List -->
+    <div class="max-w-3xl mx-auto mt-12 space-y-6">
+      <div
+        *ngFor="
+          let req of studentRequests
+            | slice : 0 : (showAll ? studentRequests.length : 4)
+        "
+        class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500 transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px]"
+      >
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="font-semibold text-gray-800 text-lg">
+              {{ req.courseName }}
+            </p>
+            <p class="text-sm text-gray-600 mt-1">
+              <span class="font-medium">Type:</span> {{ req.type | titlecase }}
+            </p>
+          </div>
+          <span
+            class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full capitalize"
+            [ngClass]="{
+              'bg-yellow-100 text-yellow-800': req.status === 'pending',
+              'bg-green-100 text-green-800': req.status === 'approved',
+              'bg-red-100 text-red-800': req.status === 'rejected'
+            }"
+          >
+            {{ req.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Show All / Show Less -->
+      <div class="text-center mt-4">
+        <button
+          *ngIf="studentRequests.length > 4"
+          (click)="toggleShowAll()"
+          class="text-blue-600 hover:text-blue-800 font-medium underline text-sm"
+        >
+          {{ showAll ? "Show Less" : "View All Requests" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Enrolled Students Section -->
+    <div
+      *ngIf="studentsInSelectedCourse.length > 0"
+      class="mt-12 max-w-3xl mx-auto"
+    >
+      <h2 class="text-2xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-green-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857"
+          />
+        </svg>
+        🧑‍🎓 Students Enrolled in "{{ selectedCourseName }}"
+      </h2>
+      <ul class="space-y-3">
+        <li
+          *ngFor="let student of studentsInSelectedCourse"
+          class="bg-blue-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+        >
+          <span class="font-medium text-gray-800">{{
+            student.studentName
+          }}</span>
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>

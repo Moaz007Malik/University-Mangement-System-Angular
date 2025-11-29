@@ -1,0 +1,231 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-gray-800">📅 Time Table</h1>
+
+      <div class="bg-white p-6 rounded-xl shadow mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">
+          Add New Time Slot
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            [(ngModel)]="newSlot.courseId"
+            placeholder="Course Id"
+            class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100"
+            hidden
+          />
+          <input
+            [(ngModel)]="newSlot.courseCode"
+            placeholder="Course Code"
+            class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 outline-none"
+            readonly
+          />
+          <select
+            [(ngModel)]="newSlot.courseId"
+            (change)="onCourseSelect()"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+            <option value="" disabled selected>Select Course</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.COURSE_NAME }} ({{ course.COURSE_CODE }})
+            </option>
+          </select>
+
+          <select
+            [(ngModel)]="newSlot.teacherId"
+            class="w-full border border-gray-300 rounded-lg p-3 bg-gray-100 outline-none"
+            [disabled]="newSlot.courseId"
+          >
+            <option value="" disabled selected>Select Teacher</option>
+            <option *ngFor="let teacher of teachers" [value]="teacher.id">
+              {{ teacher.USER_NAME }}
+            </option>
+          </select>
+
+          <select
+            [(ngModel)]="newSlot.rooms"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+            <option value="" disabled selected>Select Room</option>
+            <option *ngFor="let room of Rooms" [value]="room">
+              {{ room }}
+            </option>
+          </select>
+          <select
+            [(ngModel)]="newSlot.day"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+            <option value="" disabled selected>Select Day</option>
+            <option *ngFor="let day of Days" [value]="day">{{ day }}</option>
+          </select>
+          <input
+            [(ngModel)]="newSlot.startTime"
+            type="time"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Start Time"
+          />
+          <input
+            [(ngModel)]="newSlot.endTime"
+            type="time"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="End Time"
+          />
+        </div>
+        <button
+          (click)="addTimeSlot()"
+          class="mt-4 inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          <span>➕</span>
+          <span>Add Slot</span>
+        </button>
+      </div>
+
+      <div *ngIf="editingSlot" class="bg-green-50 p-6 rounded-xl shadow mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-green-800">
+          Update Time Slot
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <select
+            [(ngModel)]="editingSlot.courseId"
+            (change)="onEditCourseSelect()"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          >
+            <option value="" disabled>Select Course</option>
+            <option *ngFor="let course of courses" [value]="course.id">
+              {{ course.COURSE_NAME }} ({{ course.COURSE_CODE }})
+            </option>
+          </select>
+
+          <select
+            [(ngModel)]="editingSlot.teacherId"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          >
+            <option value="" disabled>Select Teacher</option>
+            <option *ngFor="let teacher of teachers" [value]="teacher.id">
+              {{ teacher.USER_NAME }}
+            </option>
+          </select>
+
+          <select
+            [(ngModel)]="editingSlot.rooms"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          >
+            <option value="" disabled>Select Room</option>
+            <option *ngFor="let room of Rooms" [value]="room">
+              {{ room }}
+            </option>
+          </select>
+
+          <select
+            [(ngModel)]="editingSlot.day"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          >
+            <option value="" disabled>Select Day</option>
+            <option *ngFor="let day of Days" [value]="day">{{ day }}</option>
+          </select>
+
+          <input
+            [(ngModel)]="editingSlot.startTime"
+            type="time"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          />
+
+          <input
+            [(ngModel)]="editingSlot.endTime"
+            type="time"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+          />
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button
+            (click)="updateTimeSlot(editingSlot!)"
+            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            ✅ Save
+          </button>
+          <button
+            (click)="editingSlot = null"
+            class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            ❌ Cancel
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th
+                class="px-6 py-3 text-left font-medium uppercase tracking-wider"
+              >
+                Day
+              </th>
+              <th
+                class="px-6 py-3 text-left font-medium uppercase tracking-wider"
+              >
+                Course Code
+              </th>
+              <th
+                class="px-6 py-3 text-left font-medium uppercase tracking-wider"
+              >
+                Teacher
+              </th>
+              <th
+                class="px-6 py-3 text-left font-medium uppercase tracking-wider"
+              >
+                Room
+              </th>
+              <th
+                class="px-6 py-3 text-left font-medium uppercase tracking-wider"
+              >
+                Time
+              </th>
+              <th
+                class="px-6 py-3 text-right font-medium uppercase tracking-wider"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr
+              *ngFor="let slot of timeSlots"
+              class="hover:bg-gray-50 transition"
+            >
+              <td class="px-6 py-4 whitespace-nowrap">{{ slot.day }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">{{ slot.courseCode }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ getTeacherName(slot.teacherId) }}
+              </td>
+
+              <td class="px-6 py-4 whitespace-nowrap">{{ slot.rooms }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {{ slot.startTime }} - {{ slot.endTime }}
+              </td>
+              <td class="px-6 py-4 text-right flex justify-between">
+                <button
+                  (click)="deleteTimeSlot(slot.id!)"
+                  class="text-red-600 hover:text-red-800 flex items-center gap-1 justify-end w-full"
+                >
+                  🗑️ Remove
+                </button>
+                <button
+                  (click)="toggleEdit(slot)"
+                  class="text-green-600 hover:text-green-800 flex items-center gap-1 justify-end w-full"
+                >
+                  🔁 Update
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

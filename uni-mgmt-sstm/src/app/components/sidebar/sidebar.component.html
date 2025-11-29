@@ -1,0 +1,147 @@
+<div
+  [ngClass]="{
+    'w-64': !isCollapsed,
+    'w-20': isCollapsed
+  }"
+  class="h-screen bg-gradient-to-b from-gray-900 to-black text-white flex flex-col fixed transition-all duration-300 shadow-2xl"
+>
+  <!-- Toggle button -->
+  <div class="flex justify-between p-4">
+    <h1 *ngIf="!isCollapsed" class="text-2xl font-bold">Admin Panel</h1>
+    <button
+      (click)="toggleSidebar()"
+      class="text-gray-400 hover:text-white transition"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          [attr.d]="isCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 space-y-2 px-2">
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="bg-red-600"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 hover:shadow-md transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🏠 Dashboard</span>
+      <span *ngIf="isCollapsed">🏠</span>
+    </a>
+
+    <a
+      routerLink="/courses"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">📚 Courses</span>
+      <span *ngIf="isCollapsed">📚</span>
+    </a>
+
+    <a
+      routerLink="/students"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🧑‍🎓 Students</span>
+      <span *ngIf="isCollapsed">🧑‍🎓</span>
+    </a>
+
+    <a
+      routerLink="/teachers"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🧑‍🏫 Teachers</span>
+      <span *ngIf="isCollapsed">🧑‍🏫</span>
+    </a>
+
+    <a
+      routerLink="/faculty"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🤵 Faculty</span>
+      <span *ngIf="isCollapsed">🤵</span>
+    </a>
+
+    <a
+      routerLink="/search"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🔍 Search</span>
+      <span *ngIf="isCollapsed">🔍</span>
+    </a>
+
+    <a
+      routerLink="/time-table"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🗓️ Time Tables</span>
+      <span *ngIf="isCollapsed">🗓️</span>
+    </a>
+
+    <a
+      routerLink="/grades"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">📝 Grades</span>
+      <span *ngIf="isCollapsed">📝</span>
+    </a>
+
+    <a
+      routerLink="/all-internals"
+      routerLinkActive="bg-red-600 hover:bg-red-800"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">📜 Quiz/Assignments</span>
+      <span *ngIf="isCollapsed">📜</span>
+    </a>
+
+    <button
+      (click)="confirmLogout()"
+      class="group flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 transition w-full text-left"
+    >
+      <span *ngIf="!isCollapsed" class="text-sm">🚪 Logout</span>
+      <span *ngIf="isCollapsed">🚪</span>
+    </button>
+  </nav>
+  <div
+    *ngIf="showLogoutConfirm"
+    class="fixed inset-0 flex items-center justify-center bg-black/60"
+  >
+    <div class="bg-white rounded-xl shadow-xl p-6 text-center max-w-sm w-full">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">
+        Are you sure you want to log out?
+      </h2>
+      <div class="flex justify-center space-x-4">
+        <button
+          (click)="cancelLogout()"
+          class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800"
+        >
+          No
+        </button>
+        <button
+          (click)="logout()"
+          class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

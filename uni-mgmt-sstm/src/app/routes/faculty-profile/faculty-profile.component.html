@@ -1,0 +1,37 @@
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow border">
+  <h1 class="text-2xl font-bold text-blue-600 mb-4">🎓 Faculty Profile</h1>
+
+  <p><strong>ID:</strong> {{ faculty.USER_ID }}</p>
+  <p><strong>Name:</strong> {{ faculty.USER_NAME }}</p>
+  <p><strong>Email:</strong> {{ faculty.USER_EMAIL }}</p>
+  <p><strong>Courses:</strong> {{ faculty.COURSES }}</p>
+
+  <button (click)="toggleEdit()" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded">
+    {{ showEditForm ? 'Cancel' : 'Edit' }}
+  </button>
+
+  <form *ngIf="showEditForm" (ngSubmit)="updateFaculty(faculty)" class="mt-6 space-y-4">
+    <input
+      [(ngModel)]="faculty.USER_NAME"
+      name="USER_NAME"
+      class="border p-2 w-full"
+      aria-label="Edit Name"
+      placeholder="Edit Faculty Name"
+    />
+    <input
+      [(ngModel)]="faculty.USER_EMAIL"
+      name="USER_EMAIL"
+      class="border p-2 w-full"
+      aria-label="Edit Email"
+      placeholder="Edit Faculty Email"
+    />
+    <input
+      [(ngModel)]="faculty.COURSES"
+      name="COURSES"
+      class="border p-2 w-full"
+      aria-label="Edit Courses"
+      placeholder="Edit Assigned Courses"
+    />
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+  </form>
+</div>

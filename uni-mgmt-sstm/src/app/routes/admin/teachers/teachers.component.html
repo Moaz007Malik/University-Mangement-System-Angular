@@ -1,0 +1,110 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar></app-sidebar>
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="min-h-screen max-w-6xl mx-auto bg-gray-100 py-10 px-4">
+      <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-2">
+        🎓 University Management System
+      </h1>
+      <p class="text-center text-gray-600 text-lg mb-10">
+        Showing {{ selectedType | titlecase }} data from the system.
+      </p>
+
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Teachers</h2>
+        <button
+          class="px-6 py-2 rounded-lg font-medium transition bg-blue-600 text-white hover:bg-blue-700"
+        >
+          <a routerLink="/add-user">Add User ➕</a>
+        </button>
+      </div>
+
+      <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full text-sm text-left text-gray-700">
+          <thead class="text-xs uppercase bg-gray-200 text-gray-700">
+            <tr>
+              <th class="px-6 py-4">Name</th>
+              <th class="px-6 py-4">User ID</th>
+              <th class="px-6 py-4">Email</th>
+              <th class="px-6 py-4">Courses</th>
+              <th class="px-6 py-4">Type</th>
+              <th class="px-6 py-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of teachers">
+              <tr
+                *ngIf="item.USER_TYPE === selectedType"
+                class="border-t hover:bg-gray-50"
+              >
+                <td class="px-6 py-4 font-semibold text-blue-800">
+                  {{ item.USER_NAME }}
+                </td>
+                <td class="px-6 py-4">{{ formatUserId(item.USER_ID) }}</td>
+                <td class="px-6 py-4">{{ item.USER_EMAIL }}</td>
+                <td class="px-6 py-4">
+                  <div>
+                    <div class="flex flex-wrap gap-1">
+                      <div
+                        *ngFor="let courseName of item.COURSES || []"
+                        class="flex items-center bg-green-100 text-green-800 px-2 py-1 rounded text-xs"
+                      >
+                        {{
+                          getCourseNameById(courseName.id)
+                            ? getCourseNameById(courseName.id.trim())
+                            : ""
+                        }}
+                        <button
+                          (click)="
+                            removeCourseFromTeacher(
+                              item,
+                              courseName.id ? courseName.id.trim() : ''
+                            )
+                          "
+                          class="ml-1 text-red-500 hover:text-red-700 font-bold"
+                          title="Remove course"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    </div>
+
+                    <select
+                      #courseSelect
+                      class="mt-2 px-2 py-1 border border-gray-300 rounded bg-white text-sm"
+                      (change)="updateTeacherCourse(item, courseSelect.value)"
+                    >
+                      <option disabled selected>Add a course</option>
+                      <option
+                        *ngFor="let course of courses"
+                        [value]="course.id"
+                      >
+                        {{ course.COURSE_NAME }}
+                      </option>
+                    </select>
+                  </div>
+                </td>
+                <td class="px-6 py-4 capitalize">{{ item.USER_TYPE }}</td>
+                <td class="px-6 py-4 text-center flex justify-center gap-2">
+                  <button
+                    (click)="deleteUser(item)"
+                    class="bg-red-600 text-white px-4 py-1 rounded-md hover:bg-red-700 transition"
+                  >
+                    Delete
+                  </button>
+                  <a
+                    [routerLink]="['/user-profile', item.id]"
+                    class="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition"
+                  >
+                    Profile
+                  </a>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

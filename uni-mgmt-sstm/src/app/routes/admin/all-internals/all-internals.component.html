@@ -1,0 +1,55 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg py-8 px-6">
+      <h2 class="text-3xl font-extrabold text-blue-900 mb-8 text-center">
+        🎓 All Internals by Teachers
+      </h2>
+
+      <div *ngFor="let teacherId of getTeacherIds()" class="mb-12">
+        <h3 class="text-2xl font-semibold text-purple-800 mb-5 flex items-center">
+          👨‍🏫 <span class="ml-2">{{ getUserName(teacherId) }}</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Quizzes Section -->
+          <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow-md p-5 transition transform hover:scale-105 duration-200">
+            <h4 class="text-lg font-bold text-blue-700 flex items-center mb-3">
+              📘 Quizzes
+            </h4>
+            <div
+              *ngFor="let quiz of filterGrades(groupedByTeacher[teacherId], 'quiz')"
+              class="mb-4 pb-3 border-b border-blue-200 last:border-0"
+            >
+              <p><strong class="text-gray-700">Course:</strong> {{ getCourseName(quiz.courseId) }}</p>
+              <p><strong class="text-gray-700">Student:</strong> {{ getStudentName(quiz.studentId) }}</p>
+              <p><strong class="text-gray-700">Title:</strong> {{ quiz.title }}</p>
+              <p><strong class="text-gray-700">Date:</strong> {{ quiz.date }}</p>
+              <p><strong class="text-gray-700">Marks:</strong> {{ quiz.marks }}</p>
+            </div>
+          </div>
+
+          <!-- Assignments Section -->
+          <div class="bg-green-50 border-l-4 border-green-500 rounded-lg shadow-md p-5 transition transform hover:scale-105 duration-200">
+            <h4 class="text-lg font-bold text-green-700 flex items-center mb-3">
+              📗 Assignments
+            </h4>
+            <div
+              *ngFor="let assignment of filterGrades(groupedByTeacher[teacherId], 'assignment')"
+              class="mb-4 pb-3 border-b border-green-200 last:border-0"
+            >
+              <p><strong class="text-gray-700">Course:</strong> {{ getCourseName(assignment.courseId) }}</p>
+              <p><strong class="text-gray-700">Student:</strong> {{ getStudentName(assignment.studentId) }}</p>
+              <p><strong class="text-gray-700">Title:</strong> {{ assignment.title }}</p>
+              <p><strong class="text-gray-700">Date:</strong> {{ assignment.date }}</p>
+              <p><strong class="text-gray-700">Marks:</strong> {{ assignment.marks }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <router-outlet></router-outlet>
+  </main>
+</div>

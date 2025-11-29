@@ -1,0 +1,170 @@
+<div class="flex h-screen bg-gray-100">
+  <app-sidebar></app-sidebar>
+
+  <div
+    class="min-h-screen w-6xl mx-auto items-center mx-auto bg-gray-100 py-10 px-4"
+  >
+    <div
+      *ngIf="singleUser"
+      class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg border border-gray-200"
+    >
+      <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">
+        👤 Profile
+      </h1>
+
+      <div class="space-y-4 text-gray-700 text-base">
+        <p>
+          <span class="font-semibold text-gray-800">User ID:</span>
+          {{ formatUserId(singleUser.USER_ID) }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-800">User Name:</span>
+          {{ singleUser.USER_NAME }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-800">User Email:</span>
+          {{ singleUser.USER_EMAIL }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-800">User Password:</span>
+          {{ singleUser.USER_PASSWORD }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-800">User Type:</span>
+          {{ singleUser.USER_TYPE | titlecase }}
+        </p>
+        <p>
+          <span class="font-semibold text-gray-800">Can Register Courses:</span>
+          {{ singleUser.IS_AUTH_TO_REG ? "Yes" : "No" }}
+        </p>
+        <p class="font-semibold text-gray-800">
+          Courses:
+          <span class="font-normal">
+            <ng-container *ngIf="singleUser.COURSES?.length; else noCourses">
+              <ng-container
+                *ngFor="let course of singleUser.COURSES; let isLast = last"
+              >
+                {{ getCourseNameById(course.id)
+                }}<span *ngIf="!isLast">, </span>
+              </ng-container>
+            </ng-container>
+            <ng-template #noCourses>No courses enrolled</ng-template>
+          </span>
+        </p>
+      </div>
+
+      <button (click)="toggleEditForm()" class="mt-4 flex justify-center">
+        <span
+          class="px-6 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Edit User
+        </span>
+      </button>
+    </div>
+
+    <form
+      *ngIf="showEditForm"
+      class="flex flex-col items-center mt-8"
+      #editForm="ngForm"
+      (ngSubmit)="updateUser(editForm.value)"
+    >
+      <h1 class="text-3xl font-bold text-blue-700 mb-6 text-center">
+        Edit Faculty Details
+      </h1>
+
+      <label for="user_id" class="mb-2 text-gray-600 text-lg">User ID:</label>
+      <input
+        type="text"
+        name="USER_ID"
+        id="user_id"
+        [ngModel]="singleUser.USER_ID"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      />
+
+      <label for="user_name" class="mb-2 text-gray-600 text-lg"
+        >User Name:</label
+      >
+      <input
+        type="text"
+        name="USER_NAME"
+        id="user_name"
+        [ngModel]="singleUser.USER_NAME"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      />
+
+      <label for="user_email" class="mb-2 text-gray-600 text-lg"
+        >User Email:</label
+      >
+      <input
+        type="email"
+        name="USER_EMAIL"
+        id="user_email"
+        [ngModel]="singleUser.USER_EMAIL"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      />
+
+      <label for="user_password" class="mb-2 text-gray-600 text-lg"
+        >User Password:</label
+      >
+      <input
+        type="text"
+        name="USER_PASSWORD"
+        id="user_password"
+        [ngModel]="singleUser.USER_PASSWORD"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      />
+
+      <label for="user_type" class="mb-2 text-gray-600 text-lg"
+        >User Type:</label
+      >
+      <select
+        name="USER_TYPE"
+        id="user_type"
+        [ngModel]="singleUser.USER_TYPE"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      >
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="faculty">Faculty</option>
+      </select>
+
+      <label for="is_auth_to_reg" class="text-gray-600 text-lg mb-2"
+        >Can Register Courses?</label
+      >
+      <select
+        name="IS_AUTH_TO_REG"
+        id="is_auth_to_reg"
+        [ngModel]="singleUser.IS_AUTH_TO_REG"
+        ngModel
+        class="w-[40%] border border-gray-300 rounded-lg p-2 mb-1"
+      >
+        <option [ngValue]="true">Yes</option>
+        <option [ngValue]="false">No</option>
+      </select>
+
+      <label for="courses" class="hidden text-gray-600 text-lg mb-2"
+        >Courses:</label
+      >
+      <input
+        type="text"
+        name="COURSES"
+        id="courses"
+        [ngModel]="singleUser.COURSES"
+        ngModel
+        class="w-[40%] hidden border border-gray-300 rounded-lg p-2 mb-1"
+      />
+
+      <button
+        type="submit"
+        class="mt-6 px-6 py-2 rounded-lg font-medium bg-green-600 text-white hover:bg-green-700"
+      >
+        Save Changes
+      </button>
+    </form>
+  </div>
+</div>

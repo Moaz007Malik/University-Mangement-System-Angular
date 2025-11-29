@@ -1,0 +1,127 @@
+<div class="flex min-h-screen bg-gray-100">
+  <app-sidebar></app-sidebar>
+
+  <main class="flex-1 p-6 overflow-y-auto">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8">
+      <!-- Go Back -->
+      <button
+        (click)="goBack()"
+        class="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-semibold"
+      >
+        ⬅️ Go Back
+      </button>
+
+      <!-- Heading -->
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
+        👩‍🏫 Add Faculty
+      </h1>
+      <p class="text-center text-gray-600 text-lg mb-8">
+        Enter the details of the new faculty member.
+      </p>
+
+      <!-- Form -->
+      <form
+        #addFacultyForm="ngForm"
+        (ngSubmit)="addUser(addFacultyForm.value)"
+        class="space-y-6"
+      >
+        <!-- User ID -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="user_id">
+            Faculty ID
+          </label>
+          <input
+            type="text"
+            name="USER_ID"
+            id="user_id"
+            required
+            ngModel
+            #USER_ID="ngModel"
+            placeholder="Enter faculty ID"
+            class="w-full sm:w-[40%] border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p *ngIf="USER_ID.invalid && USER_ID.touched" class="text-sm text-red-600 mt-1">
+            Faculty ID is required.
+          </p>
+        </div>
+
+        <!-- Faculty Name -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="user_name">
+            Full Name
+          </label>
+          <input
+            type="text"
+            name="USER_NAME"
+            id="user_name"
+            required
+            minlength="3"
+            ngModel
+            #USER_NAME="ngModel"
+            placeholder="Enter name"
+            class="w-full sm:w-[40%] border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p *ngIf="USER_NAME.invalid && USER_NAME.touched" class="text-sm text-red-600 mt-1">
+            Name is required (min 3 characters).
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="user_email">
+            Email
+          </label>
+          <input
+            type="email"
+            name="USER_EMAIL"
+            id="user_email"
+            required
+            ngModel
+            #USER_EMAIL="ngModel"
+            placeholder="Enter email address"
+            class="w-full sm:w-[40%] border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p *ngIf="USER_EMAIL.invalid && USER_EMAIL.touched" class="text-sm text-red-600 mt-1">
+            Valid email is required.
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-gray-700 font-medium mb-1" for="user_password">
+            Password
+          </label>
+          <input
+            type="password"
+            name="USER_PASSWORD"
+            id="user_password"
+            required
+            minlength="6"
+            ngModel
+            #USER_PASSWORD="ngModel"
+            placeholder="Enter password"
+            class="w-full sm:w-[40%] border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <p *ngIf="USER_PASSWORD.invalid && USER_PASSWORD.touched" class="text-sm text-red-600 mt-1">
+            Password must be at least 6 characters.
+          </p>
+        </div>
+
+        <!-- Hidden User Type -->
+        <input type="hidden" name="USER_TYPE" [value]="'faculty'" ngModel />
+        <input type="hidden" name="IS_AUTH_TO_REG" [value]="isAuthToReg" ngModel />
+
+        <!-- Submit -->
+        <div class="text-center">
+          <button
+            type="submit"
+            [disabled]="addFacultyForm.invalid"
+            class="mt-6 px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
